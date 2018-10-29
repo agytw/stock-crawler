@@ -7,9 +7,9 @@ headers = {
 
 
 def https_get(turl):
-    request = urllib.request.Request(turl,headers=headers)
+    request = urllib.request.Request(turl, headers=headers)
     response = urllib.request.urlopen(request)
-    response = response.read().decode(encoding='UTF-8')
+    response = response.read().decode(encoding='UTF-8').strip()
     return response
 
 

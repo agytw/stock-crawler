@@ -1,5 +1,6 @@
 from openpyxl import Workbook
 
+
 def init():
     tickers = ["AAPL", "GOOGL"]
     wb = Workbook()
@@ -21,4 +22,5 @@ def init():
     wb.save('database.xlsx')
 
 
-init()
+if __name__ == '__main__':
+    init()
