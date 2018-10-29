@@ -6,14 +6,14 @@ headers = {
            }
 
 
-def https_get(turl):
+def https_get(turl):  # 发送https请求
     request = urllib.request.Request(turl, headers=headers)
     response = urllib.request.urlopen(request)
     response = response.read().decode(encoding='UTF-8').strip()
     return response
 
 
-def decode(ticker):
+def decode(ticker):  # 对指定ticker发送https请求并进行bs处理
     url = 'https://finance.yahoo.com/quote/' + ticker + '?p=' + ticker + '&.tsrc=fin-srch'
     item = https_get(url)
     decoded = BeautifulSoup(item, "html.parser")

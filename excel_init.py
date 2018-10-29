@@ -1,8 +1,8 @@
 from openpyxl import Workbook
 
 
-def init():
-    tickers = ["AAPL", "GOOGL"]
+def init(): # 创建一个新的excel，用tickers，当"数据库"
+
     wb = Workbook()
     first_time = True
 
@@ -23,4 +23,5 @@ def init():
 
 
 if __name__ == '__main__':
+    tickers = ["AAPL", "GOOGL"]
     init()
