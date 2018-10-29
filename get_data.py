@@ -4,10 +4,11 @@ headers = {
               'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36',
            }
 
-
+# 因为price和其他内容的位置不一样，所以得写两个获得信息的函数
 # 分析网页，找到type内容
 
-def generate_info_table(decoded_item):
+
+def generate_info_table(decoded_item):  # 根据decoded_item 生成 info table，因为get_info 要执行很多次，但制作table只要一次
 
     quote = decoded_item.find(id="quote-summary")
 
@@ -24,7 +25,7 @@ def generate_info_table(decoded_item):
     return tables
 
 
-def get_price(decoded_item):
+def get_price(decoded_item):  # 根据decoded_item获得price
 
     tittle = decoded_item.find(id="quote-header-info")
 
@@ -34,7 +35,7 @@ def get_price(decoded_item):
     return info
 
 
-def get_info(type, info_table):
+def get_info(type, info_table):  # 根据info table 找到type的信息
 
     if type == 'volume':  # 1,7
         x = 0

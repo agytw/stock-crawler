@@ -2,7 +2,7 @@ import basics
 from datetime import datetime, timedelta
 
 
-def get_news(ticker):
+def get_news(ticker):  # 根据tickers寻找新闻
 
     decoded_item = basics.decode(ticker)
     stream = decoded_item.find("div", id="quoteNewsStream-0-Stream")
