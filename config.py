@@ -29,7 +29,6 @@ tickers = [
     "S",
     "SSE",
     "TATAPOWER",
-    "UU",
     "VOD",
     "YORW",
     "JVLAGRO"
