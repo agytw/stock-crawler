@@ -22,7 +22,7 @@ def init(tickers, name):  # 创建一个新的excel用tickers，当"数据库"
         ws.append(title)
 
     print(wb.sheetnames)
-    wb.save(current_path + "/datas/" + name)
+    wb.save("datas/" + name)
 
 
 if __name__ == '__main__':
