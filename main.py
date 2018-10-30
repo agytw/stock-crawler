@@ -17,7 +17,7 @@ half_Hour_date = datetime.now()  # 启动时先进行一次所有搜索
 
 def main_action(one_day_date, three_day_date):
 
-    wb = load_workbook(current_path + "/datas/" + workbook )
+    wb = load_workbook("datas/" + workbook )
     now = datetime.now().strftime('%Y-%m-%d %H:%M')
     str_one = one_day_date.strftime('%Y-%m-%d %H:%M')  # 似乎不变成字符串形式不好抹掉秒后面的时间，不抹不好比
     str_three = three_day_date.strftime('%Y-%m-%d %H:%M')
