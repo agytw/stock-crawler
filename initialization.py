@@ -20,7 +20,7 @@ def init():
         ws.append(title)
 
     print(wb.sheetnames)
-    wb.save(config.wbpath + config.wb)
+    wb.save(config.wbpath + config.wbname)
 
 
 if __name__ == '__main__':
