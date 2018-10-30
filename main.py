@@ -2,8 +2,9 @@ import get_data
 import basics
 from openpyxl import load_workbook
 from datetime import datetime, timedelta
+import pickle
 
-tickers = ['AAPL', "GOOGL"]
+tickers = ["AEP", "AWK", "APU", "WTR", "T", "CHL", "CHA", "CHU", "D", "FE", "GOGO", "HNP", "MSEX", "NFG", "NTPC", "PCG", "SRE", "SVT", "SJW", "SO", "S", "SSE", "TATAPOWER", "UU", "VOD", "YORW", "JVLAGRO"]
 
 one_Day_date = datetime.now()
 three_Day_date = datetime.now()
@@ -69,9 +70,8 @@ def main_action(one_day_date, three_day_date):
 
         wb[ticker].append(value_inserted)
         print(value_inserted)
-
-    wb.save('database.xlsx')
-    print('saved')
+        wb.save('database.xlsx')
+        print('saved')
     # info = news.get_news(ticker)
 
     return one_day_date, three_day_date
