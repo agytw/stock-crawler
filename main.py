@@ -2,12 +2,8 @@ import get_data
 import basics
 from openpyxl import load_workbook
 from datetime import datetime, timedelta
-import os
 
-current_path = os.path.dirname(__file__)
-workbook = 'database.xlsx'
-
-tickers = ["AEP", "AWK", "APU", "WTR", "T", "CHL", "CHA", "CHU", "D", "FE", "GOGO", "HNP", "MSEX", "NFG", "NTPC", "PCG", "SRE", "SVT", "SJW", "SO", "S", "SSE", "TATAPOWER", "UU", "VOD", "YORW", "JVLAGRO"]
+import config
 
 one_Day_date = datetime.now()
 three_Day_date = datetime.now()
@@ -17,7 +13,7 @@ half_Hour_date = datetime.now()  # 启动时先进行一次所有搜索
 
 def main_action(one_day_date, three_day_date):
 
-    wb = load_workbook("datas/" + workbook )
+    wb = load_workbook(config.wbpath + config.wbname)
     now = datetime.now().strftime('%Y-%m-%d %H:%M')
     str_one = one_day_date.strftime('%Y-%m-%d %H:%M')  # 似乎不变成字符串形式不好抹掉秒后面的时间，不抹不好比
     str_three = three_day_date.strftime('%Y-%m-%d %H:%M')
@@ -26,7 +22,7 @@ def main_action(one_day_date, three_day_date):
     print(reached_one_day)
     print(reached_three_day)
 
-    for ticker in tickers:
+    for ticker in config.tickers:
         # ["price", "pe_ratio", "volume", "avg_volume", "beta", "market_cap", "eps", "earning_date", "dividend_yield"]
         print("search for " + ticker)
         value_inserted = []  # 看上面注释
@@ -73,7 +69,7 @@ def main_action(one_day_date, three_day_date):
 
         wb[ticker].append(value_inserted)
         print(value_inserted)
-        wb.save('database.xlsx')
+        wb.save(config.wbname)
         print('saved')
     # info = news.get_news(ticker)
 

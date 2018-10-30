@@ -79,9 +79,3 @@ if __name__ == '__main__':
     response = get_info('avg_volume', table)
     price = get_price(decoded_item)
     print(response, price)
-
-
-
-
-
-
