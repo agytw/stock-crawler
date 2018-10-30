@@ -20,16 +20,12 @@ tickers = [
     "HNP",
     "MSEX",
     "NFG",
-    "NTPC",
     "PCG",
     "SRE",
     "SVT",
     "SJW",
     "SO",
     "S",
-    "SSE",
-    "TATAPOWER",
     "VOD",
-    "YORW",
-    "JVLAGRO"
+    "YORW"
 ]
