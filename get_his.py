@@ -2,6 +2,10 @@ import basics
 import time
 import json
 from openpyxl import load_workbook
+import os
+
+current_path = os.path.dirname(__file__)
+workbook = 'database_his.xlsx'
 
 
 def stamp2date(timestamp):
@@ -42,7 +46,7 @@ def get_his(ticker, time_start, time_end):
 
 
 if __name__ == '__main__':
-    wb = load_workbook('/Users/eric/PycharmProjects/孙嘉谷傻逼/database_his.xlsx')
+    wb = load_workbook(current_path + "/datas/" + workbook)
     tickers = ["VOD", "YORW", "JVLAGRO"]
     for ticker in tickers:
         print(ticker)
