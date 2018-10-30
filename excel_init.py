@@ -1,4 +1,7 @@
 from openpyxl import Workbook
+import os
+
+current_path = os.path.dirname(__file__)
 
 
 def init(tickers, name):  # 创建一个新的excel用tickers，当"数据库"
@@ -19,9 +22,9 @@ def init(tickers, name):  # 创建一个新的excel用tickers，当"数据库"
         ws.append(title)
 
     print(wb.sheetnames)
-    wb.save(name)
+    wb.save(current_path + "/datas/" + name)
 
 
 if __name__ == '__main__':
     tickers = ["AEP", "AWK", "APU", "WTR", "T", "BHARTIARTL", "BT.A", "CHL", "CHA", "CHU", "D", "FE", "GAIL", "GOGO", "GIPCL", "HNP", "KCOM", "MTNL", "MSEX", "NFG", "NTPC", "PCG", "SRE", "SVT", "SJW", "SO", "S", "SSE", "TATAPOWER", "UU", "VOD", "YORW", "JVLAGRO"]
-    init(tickers, 'database_his.xlsx')
+    init(tickers, 'database.xlsx')
