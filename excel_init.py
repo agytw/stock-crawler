@@ -1,7 +1,7 @@
 from openpyxl import Workbook
 
 
-def init(): # 创建一个新的excel，用tickers，当"数据库"
+def init(tickers, name):  # 创建一个新的excel用tickers，当"数据库"
 
     wb = Workbook()
     first_time = True
@@ -19,9 +19,9 @@ def init(): # 创建一个新的excel，用tickers，当"数据库"
         ws.append(title)
 
     print(wb.sheetnames)
-    wb.save('database.xlsx')
+    wb.save(name)
 
 
 if __name__ == '__main__':
-    tickers = ["AAPL", "GOOGL"]
-    init()
+    tickers = ["AEP", "AWK", "APU", "WTR", "T", "BHARTIARTL", "BT.A", "CHL", "CHA", "CHU", "D", "FE", "GAIL", "GOGO", "GIPCL", "HNP", "KCOM", "MTNL", "MSEX", "NFG", "NTPC", "PCG", "SRE", "SVT", "SJW", "SO", "S", "SSE", "TATAPOWER", "UU", "VOD", "YORW", "JVLAGRO"]
+    init(tickers, 'database_his.xlsx')
