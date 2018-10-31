@@ -1,9 +1,5 @@
 ## Universal Configuration File
 
-
-wbpath = "datas/"
-wbname = "database.xlsx"
-
 # The ticker symbol of the stocks you want to track
 tickers = [
     "AEP",
