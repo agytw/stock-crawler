@@ -5,6 +5,13 @@ from datetime import datetime, timedelta
 
 import config
 
+## Check if database.xlsx exists
+from pathlib import Path
+my_file = Path(config.wbpath + config.wbname)
+if not my_file.is_file():
+    import initialization
+    initialization.init()
+
 one_Day_date = datetime.now()
 three_Day_date = datetime.now()
 half_Hour_date = datetime.now()  # 启动时先进行一次所有搜索
