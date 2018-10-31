@@ -1,7 +1,3 @@
-# Ignore default output directory
-datas/
-*.xlsx
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
