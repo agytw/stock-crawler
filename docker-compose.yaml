@@ -1,0 +1,6 @@
+version: "3"
+services:
+  crawler:
+    build: ./crawler
+    volumes:
+      - ./crawler/datas:/code/datas

@@ -54,8 +54,3 @@ def get_news(ticker):  # 根据tickers寻找新闻
 if __name__ == '__main__':
     a = get_news("AAPL")
     print(a)
-
-
-
-
-
