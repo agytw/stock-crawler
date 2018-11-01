@@ -20,7 +20,7 @@ def init():
         ws.append(title)
 
     print(wb.sheetnames)
-    wb.save(datas/database.xlsx)
+    wb.save("datas/database.xlsx")
 
 
 if __name__ == '__main__':
