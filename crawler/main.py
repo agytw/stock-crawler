@@ -97,8 +97,6 @@ def main_action():
             eps = get_data.get_info("eps", table)
             value_inserted.append(eps)
 
-            reached_one_day = False
-
         if reached_three_day:  # 到三天了
 
             earning_date = get_data.get_info("earning_date", table)
@@ -107,14 +105,16 @@ def main_action():
             dividend_yield = get_data.get_info("dividend_yield", table)
             value_inserted.append(dividend_yield)
 
-            reached_three_day = False
-
         wb[ticker].append(value_inserted)
         print(value_inserted)
         wb.save('datas/database.xlsx')
         print('saved')
     # info = news.get_news(ticker)
 
+    if reached_three_day:
+        reached_three_day = False
+    if reached_one_day:
+        reached_one_day = False
 
 if __name__ == '__main__':
     set_cycle(5)  # 设定15天
