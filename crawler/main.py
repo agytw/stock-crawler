@@ -47,11 +47,10 @@ def trigger_fetch_divided():
     global flag_fetch_divided
     flag_fetch_divided = True
 
-def fetch_ticker_price(ticker):
+def decode_ticker(ticker):
     print("Fetching " + ticker)
     for retry in range(5):
         try:
-            global decoded_item
             decoded_item = basics.decode(ticker)
             break
         except UnicodeDecodeError as err:
@@ -60,23 +59,24 @@ def fetch_ticker_price(ticker):
             else:
                 print('Unable to fetch', ticker, '\n', err)
                 raise NameError('Program Aborting')
+    return decoded_item
 
-    global value_inserted
+def fetch_ticker_price(decoded_item):
+    value_inserted = []
     time = datetime.now()
     value_inserted.append(time.strftime('%Y-%m-%d %H:%M'))
     price = get_data.get_price(decoded_item)
     value_inserted.append(price)
+    return value_inserted
 
 def main_action():
-    global flag_fetch_info, flag_fetch_divided, decoded_item
+    global flag_fetch_info, flag_fetch_divided
     wb = load_workbook('datas/database.xlsx')
 
     if flag_fetch_info:
         for ticker in config.tickers:
-            global value_inserted
-            value_inserted = []
-
-            fetch_ticker_price(ticker)
+            decoded_item = decode_ticker(ticker)
+            value_inserted = fetch_ticker_price(decoded_item)
 
             # Structurize fetched non-price data
             table = get_data.generate_info_table(decoded_item)
@@ -108,10 +108,8 @@ def main_action():
         flag_fetch_divided = False
     else:
         for ticker in config.tickers:
-            global value_inserted
-            value_inserted = []
-
-            fetch_ticker_price(ticker)
+            decoded_item = decode_ticker(ticker)
+            value_inserted = fetch_ticker_price(decoded_item)
 
             wb[ticker].append(value_inserted)
             print(value_inserted)
