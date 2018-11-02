@@ -58,16 +58,18 @@ def main_action():
     for ticker in config.tickers:
         # ["price", "pe_ratio", "volume", "avg_volume", "beta", "market_cap", "eps", "earning_date", "dividend_yield"]
         print("download for " + ticker)
-        for retires in range(5):  # 重试
+        for retry in range(5):
             try:
                 global decoded_item
                 decoded_item = basics.decode(ticker)
                 break
-            except UnicodeDecodeError as e:
-                print('Network error, retrying')
+            except UnicodeDecodeError as err:
+                if retry < 4:
+                    print('Network error, retrying')
+                else:
+                    print('Unable to fetch', ticker, '\n', err)
+                    raise NameError('Program Aborting')
 
-        if retires == 4:
-            raise("Network is Fking slow")
 
         value_inserted = []  # 看上面注释
         time = datetime.now()
