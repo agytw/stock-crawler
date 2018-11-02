@@ -29,15 +29,15 @@ reached_three_day = False
 # 整体思路是：半小时爬一次股价，再爬股价的时候检查时间有没有到 一天/三天，如果到了的话顺便分析一下剩下的
 
 
-def set_cycle(times):  # 设定一个三天循环周期
-
-    for x in range(times):  # 三天提醒
-        schedule.enter(86400 * 3 * x, 1, set_one_date)
-
-    for x in range(3*times):  # 一天提醒
-        schedule.enter(86400*x, 2, set_three_date)
-
-    for x in range(times*24*2*3):  # 半小时提醒
+def set_cycle(times):
+    for x in range(times):
+        # runs every three day
+        schedule.enter(86400 * 3 * x, 1, set_three_date)
+    for x in range(3 * times):
+        # runs daily
+        schedule.enter(86400*x, 2, set_one_date)
+    for x in range(times * 24 * 2 * 3):
+        # runs every 30 min
         schedule.enter(1800*x, 3, main_action)
 
 
