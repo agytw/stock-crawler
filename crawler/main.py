@@ -5,8 +5,7 @@ from datetime import datetime, timedelta
 import sched, time
 import config
 
-
-
+## Sched for periodically fetching stock data
 schedule = sched.scheduler(time.time, time.sleep)
 
 # Check if database.xlsx exists
@@ -20,7 +19,7 @@ else:
     initialization.init()
     print('Auto generated')
 
-
+# Generate flags for fetching non-price stats
 global reached_one_day, reached_three_day
 reached_one_day = False
 reached_three_day = False
@@ -40,7 +39,6 @@ def set_cycle(times):
         # runs every 30 min
         schedule.enter(1800*x, 3, main_action)
 
-
 def set_one_date():
     global reached_one_day
     reached_one_day = True
@@ -56,8 +54,7 @@ def main_action():
     wb = load_workbook('datas/database.xlsx')
 
     for ticker in config.tickers:
-        # ["price", "pe_ratio", "volume", "avg_volume", "beta", "market_cap", "eps", "earning_date", "dividend_yield"]
-        print("download for " + ticker)
+        print("Fetching " + ticker)
         for retry in range(5):
             try:
                 global decoded_item
@@ -65,18 +62,29 @@ def main_action():
                 break
             except UnicodeDecodeError as err:
                 if retry < 4:
-                    print('Network error, retrying')
+                    print('Network error, retrying', retry+1)
                 else:
                     print('Unable to fetch', ticker, '\n', err)
                     raise NameError('Program Aborting')
 
-
-        value_inserted = []  # 看上面注释
+        value_inserted = []
+        # value_inserted is in the form of [
+        #     "time",
+        #     "price",
+        #     "pe_ratio",
+        #     "volume",
+        #     "avg_volume",
+        #     "beta",
+        #     "market_cap",
+        #     "eps",
+        #     "earning_date",
+        #     "dividend_yield"
+        # ]
         time = datetime.now()
         value_inserted.append(time.strftime('%Y-%m-%d %H:%M'))
         table = get_data.generate_info_table(decoded_item)
 
-        price = get_data.get_price(decoded_item)  # 半小时找price
+        price = get_data.get_price(decoded_item)
         value_inserted.append(price)
 
         if reached_one_day:  # 到一天了
