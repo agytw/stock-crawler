@@ -20,9 +20,9 @@ else:
     print('Auto generated')
 
 # Generate flags for fetching non-price stats
-global reached_one_day, reached_three_day
-reached_one_day = False
-reached_three_day = False
+global flag_fetch_info, flag_fetch_divided
+flag_fetch_info = False
+flag_fetch_divided = False
 
 # 启动时先进行一次所有搜索
 # 整体思路是：半小时爬一次股价，再爬股价的时候检查时间有没有到 一天/三天，如果到了的话顺便分析一下剩下的
@@ -31,101 +31,93 @@ reached_three_day = False
 def set_cycle(times):
     for x in range(times):
         # runs every three day
-        schedule.enter(86400 * 3 * x, 1, set_three_date)
+        schedule.enter(86400 * 3 * x, 1, trigger_fetch_divided)
     for x in range(3 * times):
         # runs daily
-        schedule.enter(86400*x, 2, set_one_date)
+        schedule.enter(86400*x, 2, trigger_fetch_info)
     for x in range(times * 24 * 2 * 3):
         # runs every 30 min
         schedule.enter(1800*x, 3, main_action)
 
-def set_one_date():
-    global reached_one_day
-    reached_one_day = True
+def trigger_fetch_info():
+    global flag_fetch_info
+    flag_fetch_info = True
 
+def trigger_fetch_divided():
+    global flag_fetch_divided
+    flag_fetch_divided = True
 
-def set_three_date():
-    global reached_three_day
-    reached_three_day = True
+def decode_ticker(ticker):
+    print("Fetching " + ticker)
+    for retry in range(5):
+        try:
+            decoded_item = basics.decode(ticker)
+            break
+        except UnicodeDecodeError as err:
+            if retry < 4:
+                print('Network error, retrying', retry+1)
+            else:
+                print('Unable to fetch', ticker, '\n', err)
+                raise NameError('Program Aborting')
+    return decoded_item
 
+def fetch_ticker_price(decoded_item):
+    value_inserted = []
+    time = datetime.now()
+    value_inserted.append(time.strftime('%Y-%m-%d %H:%M'))
+    price = get_data.get_price(decoded_item)
+    value_inserted.append(price)
+    return value_inserted
 
 def main_action():
-    global reached_one_day, reached_three_day, decoded_item
+    global flag_fetch_info, flag_fetch_divided
     wb = load_workbook('datas/database.xlsx')
 
-    for ticker in config.tickers:
-        print("Fetching " + ticker)
-        for retry in range(5):
-            try:
-                global decoded_item
-                decoded_item = basics.decode(ticker)
-                break
-            except UnicodeDecodeError as err:
-                if retry < 4:
-                    print('Network error, retrying', retry+1)
-                else:
-                    print('Unable to fetch', ticker, '\n', err)
-                    raise NameError('Program Aborting')
+    if flag_fetch_info:
+        for ticker in config.tickers:
+            decoded_item = decode_ticker(ticker)
+            value_inserted = fetch_ticker_price(decoded_item)
 
-        value_inserted = []
-        # value_inserted is in the form of [
-        #     "time",
-        #     "price",
-        #     "pe_ratio",
-        #     "volume",
-        #     "avg_volume",
-        #     "beta",
-        #     "market_cap",
-        #     "eps",
-        #     "earning_date",
-        #     "dividend_yield"
-        # ]
-        time = datetime.now()
-        value_inserted.append(time.strftime('%Y-%m-%d %H:%M'))
-        table = get_data.generate_info_table(decoded_item)
-
-        price = get_data.get_price(decoded_item)
-        value_inserted.append(price)
-
-        if reached_one_day:  # 到一天了
+            # Structurize fetched non-price data
+            table = get_data.generate_info_table(decoded_item)
 
             pe_ratio = get_data.get_info("pe_ratio", table)
             value_inserted.append(pe_ratio)
-
             volume = get_data.get_info("volume", table)
             value_inserted.append(volume)
-
             avg_volume = get_data.get_info("avg_volume", table)
             value_inserted.append(avg_volume)
-
             beta = get_data.get_info("beta", table)
             value_inserted.append(beta)
-
             market_cap = get_data.get_info("market_cap", table)
             value_inserted.append(market_cap)
-
             eps = get_data.get_info("eps", table)
             value_inserted.append(eps)
+            if flag_fetch_divided:
+                earning_date = get_data.get_info("earning_date", table)
+                value_inserted.append(earning_date)
+                dividend_yield = get_data.get_info("dividend_yield", table)
+                value_inserted.append(dividend_yield)
 
-        if reached_three_day:  # 到三天了
+            wb[ticker].append(value_inserted)
+            print(value_inserted)
+            wb.save('datas/database.xlsx')
+            print('Workbook saved')
 
-            earning_date = get_data.get_info("earning_date", table)
-            value_inserted.append(earning_date)
+        flag_fetch_info = False
+        flag_fetch_divided = False
+    else:
+        for ticker in config.tickers:
+            decoded_item = decode_ticker(ticker)
+            value_inserted = fetch_ticker_price(decoded_item)
 
-            dividend_yield = get_data.get_info("dividend_yield", table)
-            value_inserted.append(dividend_yield)
+            wb[ticker].append(value_inserted)
+            print(value_inserted)
+            wb.save('datas/database.xlsx')
+            print('Workbook saved')
+        # info = news.get_news(ticker)
 
-        wb[ticker].append(value_inserted)
-        print(value_inserted)
-        wb.save('datas/database.xlsx')
-        print('saved')
-    # info = news.get_news(ticker)
-
-    if reached_three_day:
-        reached_three_day = False
-    if reached_one_day:
-        reached_one_day = False
 
 if __name__ == '__main__':
-    set_cycle(5)  # 设定15天
+    set_cycle(10)  # The program will run for 10 * 3 = 30 days
     schedule.run()
